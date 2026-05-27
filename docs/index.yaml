@@ -3,9 +3,9 @@ entries:
   vllm:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-27T20:37:27.194593963Z"
+    created: "2026-05-27T20:49:38.440248595Z"
     description: A Helm chart for deploying a vLLM endpoint
-    digest: 080a435854ec1c3fcdeb3b3edae4011afa06c856e4f6d13016868f6fbcf11538
+    digest: dbdd7848f211434faea1176ddca62c23fef1172082fe4e24ac80829ea26c3137
     maintainers:
     - email: staff@c3se.chalmers.se
       name: C3SE Staff
@@ -17,9 +17,9 @@ entries:
   vllm-copy:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-27T20:37:27.19485778Z"
+    created: "2026-05-27T20:49:38.440547053Z"
     description: Another Helm chart for deploying a vLLM endpoint
-    digest: a6cb48b4429c8d8e3d213febb1e37d1d69b3543387d77c3d599e908a80e4dff7
+    digest: 6505707713c896dfed1409e7843ab04c3d6602d4b4223c6239513c868ee2e0ef
     maintainers:
     - email: staff@c3se.chalmers.se
       name: C3SE Staff
@@ -28,4 +28,4 @@ entries:
     urls:
     - https://c3se.github.io/charts/vllm-copy-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-27T20:37:27.194199338Z"
+generated: "2026-05-27T20:49:38.439826917Z"
