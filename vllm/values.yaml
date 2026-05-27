@@ -1,12 +1,11 @@
-namespace: vllm
-
-resources:
-  limits:
-    nvidia.com/gpu: "1"
+storage:
+  pvc: "vllm-cache"
+  storageClass: null
+  create: true
 
 httpRoute:
   enabled: true
-  hostname: "mistral.c3-staff.disa.chalmers.se"
+  hostname: "vllm.YOUR-PROJECT.disa.c3se.chalmers.se"
 
 model:
   name: "mistralai/Mistral-7B-Instruct-v0.3"
@@ -26,6 +25,10 @@ service:
   type: ClusterIP
   port: 8000
   targetPort: 8000
+
+resources:
+  limits:
+    nvidia.com/gpu: "1"
 
 deployment:
   progressDeadlineSeconds: 600

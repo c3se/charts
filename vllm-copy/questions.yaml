@@ -1,66 +1,9 @@
 questions:
-  - variable: namespace
-    label: "Namespace"
-    description: "Kubernetes namespace where vLLM will be deployed"
-    type: string
-    default: "vllm"
-    required: true
-
-  - variable: image.repository
-    label: "Image Repository"
-    description: "Docker image repository for vLLM"
-    type: string
-    default: "vllm/vllm-openai"
-    required: true
-
-  - variable: image.tag
-    label: "Image Tag"
-    description: "Docker image tag/version"
-    type: string
-    default: "latest"
-    required: true
-
-  - variable: image.pullPolicy
-    label: "Image Pull Policy"
-    description: "When to pull the Docker image"
-    type: enum
-    options:
-      - "Always"
-      - "IfNotPresent"
-      - "Never"
-    default: "Always"
-
-  - variable: service.port
-    label: "Service Port"
-    description: "Port exposed by the Kubernetes service"
-    type: int
-    default: 8000
-    required: true
-
-  - variable: service.targetPort
-    label: "Target Port"
-    description: "Port inside the container"
-    type: int
-    default: 8000
-    required: true
-
   - variable: model.name
     label: "Model Name"
     description: "HuggingFace model ID to serve"
     type: string
     default: "mistralai/Mistral-7B-Instruct-v0.3"
-    required: true
-
-  - variable: model.args
-    label: "Model Arguments"
-    description: "Command-line arguments for vLLM serve"
-    type: string
-    default: |
-      --trust-remote-code
-      --enable-chunked-prefill
-      --quantization bitsandbytes
-      --gpu-memory-utilization 0.45
-      --max_num_batched_tokens 1024
     required: true
 
   - variable: resources.limits["nvidia.com/gpu"]
@@ -74,21 +17,21 @@ questions:
       - "8"
     default: "1"
     required: true
-
-  - variable: deployment.progressDeadlineSeconds
-    label: "Progress Deadline (seconds)"
-    description: "Maximum time for deployment to progress"
-    type: int
-    default: 600
+    
+  - variable: storage.pvc
+    label: "PVC name"
+    description: "Name of the PVC for weight caching"
+    type: string
+    default: "vllm-cache"
     required: true
 
-  - variable: deployment.revisionHistoryLimit
-    label: "Revision History Limit"
-    description: "Number of old replica sets to retain"
-    type: int
-    default: 3
+  - variable: storage.create
+    label: "Create storage PVC"
+    description: "Create a separate PVC for weight caching"
+    type: boolean
+    default: true
     required: true
-
+    
   - variable: httpRoute.enabled
     label: "Enable HTTPRoute"
     description: "Create HTTPRoute for external access via gateway"
