@@ -20,6 +20,7 @@ jobs:
         run: |
           mkdir -p docs
           helm package ./vllm -d docs
+          helm package ./vllm-copy -d docs
           helm repo index docs --url https://c3se.github.io/charts
 
       - name: Commit and push
