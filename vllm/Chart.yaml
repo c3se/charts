@@ -1,0 +1,9 @@
+apiVersion: v2
+name: vllm
+description: A Helm chart for deploying a vLLM endpoint
+type: application
+version: 1.0.0
+appVersion: "latest"
+maintainers:
+  - name: C3SE Staff
+    email: staff@c3se.chalmers.se

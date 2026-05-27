@@ -1,0 +1,33 @@
+namespace: vllm
+
+resources:
+  limits:
+    nvidia.com/gpu: "1"
+
+httpRoute:
+  enabled: true
+  hostname: "mistral.c3-staff.disa.chalmers.se"
+
+model:
+  name: "mistralai/Mistral-7B-Instruct-v0.3"
+  args:
+    - "--trust-remote-code"
+    - "--enable-chunked-prefill"
+    - "--quantization bitsandbytes"
+    - "--gpu-memory-utilization 0.45"
+    - "--max_num_batched_tokens 1024"
+
+image:
+  repository: vllm/vllm-openai
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+
+deployment:
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 3
+

@@ -1,0 +1,31 @@
+name: Publish Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.14.0'
+
+      - name: Package and index chart
+        run: |
+          mkdir -p docs
+          helm package ./vllm -d docs
+          helm repo index docs --url https://c3se.github.io/charts
+
+      - name: Commit and push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add docs/
+          git commit -m "Publish helm chart" || true
+          git push
