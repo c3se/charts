@@ -1,0 +1,54 @@
+# this is a helm chart that wrappes around the original jupyterhub helm chart
+# https://github.com/jupyterhub/zero-to-jupyterhub-k8s
+#
+# options are stripped down to to allow minimal customization when running on Disa
+
+jupyterhub:
+  singleuser:
+    image:
+      name: "quay.io/jupyter/pytorch-notebook"
+      tag: "cuda12-pytorch-2.11.0"
+    defaultUrl: "/lab"
+    extraEnv:
+      JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+    extraResource:
+      limits:
+        nvidia.com/gpu: "1"
+
+  hub:
+    networkPolicy:
+      egress:
+        - ports:
+            - port: 443
+            - port: 6443
+    config:
+      JupyterHub:
+        authenticator_class: gitlab
+      GitLabOAuthenticator:
+        manage_groups: true
+        allow_all: false
+        allowed_users: []
+        allowed_gitlab_groups: []
+        client_id: "<get from gitlab>"
+        client_secret: "<get from gitlab>"
+        oauth_callback_url: "https://<hostname>/hub/oauth_callback"
+        gitlab_url: https://git.chalmers.se
+        scope:
+        - read_user
+        - read_api
+        - openid
+        - profile
+        - email
+
+  proxy:
+    service:
+      type: ClusterIP
+
+  httpRoute:
+    enabled: true
+    hostnames:
+      - "jupyter.<your-project>.disa.c3se.chalmers.se"
+    gateway:
+      name: public-gateway
+      namespace: gateway
+      sectionName: https

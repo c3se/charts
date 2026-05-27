@@ -1,0 +1,45 @@
+name: Publish Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Package and index chart
+        run: |
+          mkdir -p .helm-repo
+          helm package ./vllm -d .helm-repo
+          helm repo add jupytherhub https://hub.jupyter.org/helm-chart/
+          helm dependency build ./jupyterhub
+          helm package ./jupyterhub -d .helm-repo
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+          
+      - name: Update Helm repository
+        run: |
+          cp .helm-repo/*.tgz gh-pages/
+
+          helm repo index gh-pages \
+            --url https://c3se.github.io/charts
+            
+      - name: Publish
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Publish Helm chart"
+          git push origin gh-pages

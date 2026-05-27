@@ -1,0 +1,11 @@
+apiVersion: v2
+name: jupyterhub
+description: A wrappper around the jupyterhub chart
+type: application
+version: 0.0.1
+appVersion: "5.5.1"
+
+dependencies:
+  - name: jupyterhub
+    version: "4.4.1"
+    repository: "https://hub.jupyter.org/helm-chart/"

@@ -1,0 +1,13 @@
+{{- if .Values.storage.create }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.pvc }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: {{ .Values.storage.class }}
+  resources:
+    requests:
+      storage: 500Gi
+{{- end }}

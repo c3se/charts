@@ -1,0 +1,48 @@
+questions:
+  - variable: jupyterhub.singleuser.image.name
+    label: "Custom Image Name (repo)"
+
+  - variable: jupyterhub.singleuser.image.tag
+    label: "Custom Image Tag"
+
+  - variable: jupyterhub.httpRoute.enabled
+    label: "Enable HTTPRoute"
+    description: "Create HTTPRoute for external access via gateway"
+    type: boolean
+    show_subquestions_if: true
+    subquestions:
+      - variable: jupyterhub.httpRoute.hostnames.0
+        label: "Hostname"
+        type: string
+        required: true
+        description: "jupyter.<your-project>.disa.c3se.chalmers.se"
+        show_if: "jupyterhub.httpRoute.enabled=true"
+
+  - variable: jupyterhub.hub.config.GitLabOAuthenticator.gitlab_url
+    label: "Gitlab instance for authentication"
+    type: string
+    required: true
+
+  - variable: jupyterhub.hub.config.GitLabOAuthenticator.oauth_callback_url
+    label: "OIDC callback URL"
+    type: string
+    description: "https://<hostname>/hub/oauth_callback"
+    required: true
+
+  - variable: jupyterhub.hub.config.GitLabOAuthenticator.client_id
+    label: "OIDC client ID"
+    type: string
+    description: "Get from git.chalmers.se"
+    required: true
+
+  - variable: jupyterhub.hub.config.GitLabOAuthenticator.client_secret
+    label: "OIDC client secret"
+    type: string
+    description: "Get from git.chalmers.se"
+    required: true
+
+  - variable: jupyterhub.hub.config.GitLabOAuthenticator.allow_all
+    label: "Allow any user to login (if false, set the list of allowed users/groups in values.yaml)"
+    type: boolean
+    default: false
+    required: true
