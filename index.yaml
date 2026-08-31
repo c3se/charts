@@ -3,13 +3,13 @@ entries:
   jupyterhub:
   - apiVersion: v2
     appVersion: 5.5.1
-    created: "2026-08-31T17:06:15.311610648Z"
+    created: "2026-08-31T17:16:51.117804706Z"
     dependencies:
     - name: jupyterhub
       repository: https://hub.jupyter.org/helm-chart/
       version: 4.4.1
     description: A wrappper around the jupyterhub chart
-    digest: 4339da1e34e1c1a7d0310db021836eaeced39ee037111e7e77d0d7a993a08330
+    digest: d3c9cce3a025184c22638dc65ecc5ffa298fb64fc0baf8c4cad89056f799d5cb
     name: jupyterhub
     type: application
     urls:
@@ -18,9 +18,9 @@ entries:
   vllm:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-31T17:06:15.311868388Z"
+    created: "2026-08-31T17:16:51.11809581Z"
     description: A Helm chart for deploying a vLLM endpoint
-    digest: 09b205802eee6a42acdef717bd47350004637f7a35b400d6fa60476a27f7b21a
+    digest: a4fdbd040eb8a3d0a17e4d102cf516ad266c0cb09e40dafe75d45d37a5cbd564
     maintainers:
     - email: staff@c3se.chalmers.se
       name: C3SE Staff
@@ -29,4 +29,4 @@ entries:
     urls:
     - https://c3se.github.io/charts/vllm-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-31T17:06:15.308655894Z"
+generated: "2026-08-31T17:16:51.113343751Z"
