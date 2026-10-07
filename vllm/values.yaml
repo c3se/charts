@@ -5,7 +5,10 @@ storage:
 
 httpRoute:
   enabled: true
-  hostname: "vllm.YOUR-PROJECT.disa.c3se.chalmers.se"
+  subdomain: "vllm"
+  securityPolicy: true
+  allowedCidrs:
+    - 129.16.0.0/16
 
 model:
   name: "mistralai/Mistral-7B-Instruct-v0.3"
@@ -27,8 +30,9 @@ service:
   targetPort: 8000
 
 resources:
-  limits:
-    nvidia.com/gpu: "1"
+  cpu: 8
+  memory: 16
+  gpu: 1
 
 deployment:
   progressDeadlineSeconds: 600

@@ -4,7 +4,6 @@ metadata:
   name: {{ include "vllm.fullname" . }}
   labels:
     {{- include "vllm.labels" . | nindent 4 }}
-  namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   progressDeadlineSeconds: {{ .Values.deployment.progressDeadlineSeconds }}
@@ -62,8 +61,14 @@ spec:
           failureThreshold: 3
           successThreshold: 1
         resources:
+          requests:
+            cpu: {{ .Values.resources.cpu }}
+            memory: {{ .Values.resources.memory }}Gi
+            nvidia.com/gpu: {{ .Values.resources.gpu }}
           limits:
-            {{- toYaml .Values.resources.limits | nindent 12 }}
+            cpu: {{ .Values.resources.cpu }}
+            memory: {{ .Values.resources.memory }}Gi
+            nvidia.com/gpu: {{ .Values.resources.gpu }}
         volumeMounts:
         - name: cache-volume
           mountPath: /root/.cache/huggingface

@@ -6,16 +6,29 @@ questions:
     default: "mistralai/Mistral-7B-Instruct-v0.3"
     required: true
 
-  - variable: resources.limits."nvidia.com/gpu"
-    label: "GPU Limit"
+  - variable: resources.gpu
+    label: "GPU"
     description: "Number of GPUs per pod"
     type: enum
     options:
       - "1"
       - "2"
       - "4"
-      - "8"
     default: "1"
+    required: true
+    
+  - variable: resources.cpu
+    label: "CPU"
+    description: "Number of CPU cores per pod"
+    type: string
+    default: "8"
+    required: true
+    
+  - variable: resources.memory
+    label: "Memory"
+    description: "Max memory usage (in Gi)"
+    type: string
+    default: "16"
     required: true
     
   - variable: storage.pvc
@@ -39,10 +52,24 @@ questions:
     default: true
     show_subquestions_if: true
     subquestions:
-      - variable: httpRoute.hostname
-        label: "Hostname"
-        description: "Hostname for the HTTPRoute"
+      - variable: httpRoute.subdomain
+        label: "Subdomain"
+        description: "Subdomain for the HTTPRoute (under .<your-proj>.disa.c3se.chalmers.se)"
         type: string
-        default: "vllm.<your-project>.disa.c3se.chalmers.se"
+        default: "vllm"
+        required: true
+        show_if: "httpRoute.enabled=true"
+      - variable: httpRoute.securityPolicy
+        label: "SecurityPolicy"
+        description: "Restrict access to endpoint with a security policy"
+        type: boolean
+        default: true
+        required: true
+        show_if: "httpRoute.enabled=true"
+      - variable: httpRoute.allowedCidrs.0
+        label: "Allowed CIDR"
+        description: "Allowed CIDR to access the service (a list can be added in the yaml)"
+        type: string
+        default: "129.16.0.0/16"
         required: true
         show_if: "httpRoute.enabled=true"

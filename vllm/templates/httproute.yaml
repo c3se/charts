@@ -1,18 +1,21 @@
 {{- if .Values.httpRoute.enabled }}
+{{- $ns := lookup "v1" "Namespace" "" .Release.Namespace  -}}
+{{- $dirname := index $ns.metadata.labels "c3se.chalmers.se/directoryName" -}}
+{{- $hostname := printf "%s.%s.disa.c3se.chalmers.se" .Values.httpRoute.subdomain $dirname -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ include "vllm.fullname" . }}
   labels:
     {{- include "vllm.labels" . | nindent 4 }}
-  namespace: {{ .Values.namespace }}
 spec:
   parentRefs:
-    - name: public-gateway
-      namespace: gateway
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: {{ include "vllm.fullname" . }}
       sectionName: https
   hostnames:
-    - {{ .Values.httpRoute.hostname }}
+    - {{ $hostname }}
   rules:
     - matches:
         - path:
@@ -21,4 +24,46 @@ spec:
       backendRefs:
         - name: {{ include "vllm.fullname" . }}
           port: {{ .Values.service.port }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: {{ include "vllm.fullname" . }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-issuer
+spec:
+  parentRef:
+    name: public-gateway
+    namespace: gateway
+    kind: Gateway
+    group: gateway.networking.k8s.io
+  listeners:
+    - hostname: {{ $hostname }}
+      protocol: HTTPS
+      port: 443
+      name: https
+      tls:
+        certificateRefs:
+          - name: {{ include "vllm.fullname" . }}-tls
+            kind: Secret
+        mode: Terminate
+{{- if .Values.httpRoute.securityPolicy }}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: {{ include "vllm.fullname" . }}
+spec:
+  targetRefs:
+    - kind: HTTPRoute
+      name: {{ include "vllm.fullname" . }}
+      group:  gateway.networking.k8s.io
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          clientCIDRs:
+            {{- toYaml .Values.httpRoute.allowedCidrs | nindent 12. }}
+{{- end }}
 {{- end }}

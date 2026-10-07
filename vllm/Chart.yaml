@@ -2,7 +2,7 @@ apiVersion: v2
 name: vllm
 description: A Helm chart for deploying a vLLM endpoint
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "latest"
 maintainers:
   - name: C3SE Staff
