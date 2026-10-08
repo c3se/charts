@@ -25,6 +25,8 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
+      nodeSelector:
+        nvidia.com/gpu.product: "{{ .Values.resources.gpu_model }}"
       containers:
       - name: vllm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

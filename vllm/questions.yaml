@@ -16,6 +16,16 @@ questions:
       - "4"
     default: "1"
     required: true
+
+  - variable: resources.gpu_model
+    label: "GPU model"
+    description: "GPU model"
+    type: enum
+    options:
+      - "NVIDIA-A40"
+      - "NVIDIA-A100-SXM4-80GB"
+    default: "NVIDIA-A40"
+    required: true
     
   - variable: resources.cpu
     label: "CPU"

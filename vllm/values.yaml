@@ -33,6 +33,7 @@ resources:
   cpu: 8
   memory: 16
   gpu: 1
+  gpu_model: NVIDIA-A40
 
 deployment:
   progressDeadlineSeconds: 600
