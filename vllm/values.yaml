@@ -36,6 +36,20 @@ resources:
   gpu_model: NVIDIA-A40
 
 deployment:
-  progressDeadlineSeconds: 600
+  progressDeadlineSeconds: 1200
   revisionHistoryLimit: 3
-
+  startupProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 1
+    failureThreshold: 30
+    successThreshold: 1
+  readinessProbe:
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 6
+    successThreshold: 1
+  livenessProbe:
+    timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
