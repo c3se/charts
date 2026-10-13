@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "vllm.labels" . | nindent 4 }}
 spec:
-  timeoutes:
+  timeouts:
     request: 300s
   parentRefs:
     - group: gateway.networking.k8s.io
