@@ -9,8 +9,6 @@ metadata:
   labels:
     {{- include "vllm.labels" . | nindent 4 }}
 spec:
-  timeouts:
-    request: 300s
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: ListenerSet
@@ -26,6 +24,8 @@ spec:
       backendRefs:
         - name: {{ include "vllm.fullname" . }}
           port: {{ .Values.service.port }}
+      timeouts:
+        request: 300s
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: ListenerSet
