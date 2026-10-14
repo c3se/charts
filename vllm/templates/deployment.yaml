@@ -1,3 +1,15 @@
+{{- $prefixes := dict
+  "0.25" "quarter"
+  "0.5" "half"
+  "1" "one"
+  "2" "two"
+  "4" "four"
+}}
+{{- $count := printf "%v" .Values.resources.gpu }}
+{{- $model := dict
+  "NVIDIA A40" "a40"
+  "NVIDIA A100-SXM4-80GB" "a100fat"
+}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -69,16 +81,16 @@ spec:
           successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
         resources:
           claims:
-          - name: shared-gpu
-            request: mps-gpu
+          - name: {{ printf "%s-%s" (index $prefixes $count) (index $model .Values.resources.gpu_model) | quote }}
+            request: {{ printf "%s%s" (ternary "mps-" "" (lt (.Values.resources.gpu | float64) 1.0)) "gpu" | quote }}
         volumeMounts:
         - name: cache-volume
           mountPath: /root/.cache/huggingface
         - name: shm
           mountPath: /dev/shm
       resourceClaims:
-      - name: shared-gpu
-        resourceClaimTemplateName: {{ .Release.Name }}-gpu
+      - name: {{ printf "%s-%s" (index $prefixes $count) (index $model .Values.resources.gpu_model) | quote }}
+        resourceClaimTemplateName: {{ printf "%s-%s" (index $prefixes $count) (index $model .Values.resources.gpu_model) | quote }}
       volumes:
       - name: cache-volume
         persistentVolumeClaim:
