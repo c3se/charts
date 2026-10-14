@@ -3,13 +3,13 @@ entries:
   jupyterhub:
   - apiVersion: v2
     appVersion: 5.5.1
-    created: "2026-10-14T13:48:46.339609565Z"
+    created: "2026-10-14T14:56:53.291726683Z"
     dependencies:
     - name: jupyterhub
       repository: https://hub.jupyter.org/helm-chart/
       version: 4.4.1
     description: A wrappper around the jupyterhub chart
-    digest: 48305d1f23e0fe29953d1d775824d9083d932f41487f3d06914c505c7882c5e0
+    digest: 97af0455c36bd183ced7372de57f9faa43aa4aaca411b31ce30f3e7e7f6e213e
     name: jupyterhub
     type: application
     urls:
@@ -18,7 +18,20 @@ entries:
   vllm:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.342556056Z"
+    created: "2026-10-14T14:56:53.292359626Z"
+    description: A Helm chart for deploying a vLLM endpoint
+    digest: 6e0c43484f3981d7875000630d935748a1c709e0174adc9eb83181e61bb8254d
+    maintainers:
+    - email: staff@c3se.chalmers.se
+      name: C3SE Staff
+    name: vllm
+    type: application
+    urls:
+    - https://c3se.github.io/charts/vllm-0.0.10.tgz
+    version: 0.0.10
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-10-14T14:56:53.2957433Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: b899d1d34117db4c00527a1ab1408f028d2efc1a35f8a5fa2e8a5c1b1b689f17
     maintainers:
@@ -31,7 +44,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.34219423Z"
+    created: "2026-10-14T14:56:53.294705102Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: 642982b41e6396c2aaa0fbff57a1fa7e6f0964f7931a553b8ec188fb6e8120a0
     maintainers:
@@ -44,7 +57,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.341840087Z"
+    created: "2026-10-14T14:56:53.294358764Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: a1a6d93a25f1af55e8c49bb97b49d8d82f21de17efa933ee035731790311a64c
     maintainers:
@@ -57,7 +70,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.341502897Z"
+    created: "2026-10-14T14:56:53.294011195Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: da2343c4a92f286dcd956200733e8e61e315dc41d3caf2e3359ac42c9f5e5b5d
     maintainers:
@@ -70,7 +83,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.341129839Z"
+    created: "2026-10-14T14:56:53.293668724Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: 1a39daa72c61c24594ce3fd65a3a5ebf2de713ccb00047627e0fe4b2b2fb7d8d
     maintainers:
@@ -83,7 +96,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.340827002Z"
+    created: "2026-10-14T14:56:53.293300926Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: 776b84862704830ffd02f7bbca61d8e0eb86a69719c6089e57693f158cd4f1b1
     maintainers:
@@ -96,7 +109,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.340507926Z"
+    created: "2026-10-14T14:56:53.292982161Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: 70a9ec5673cd76380cffd1351ac129957e37405335322af3d6e42b3800401991
     maintainers:
@@ -109,7 +122,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.340170685Z"
+    created: "2026-10-14T14:56:53.292695785Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: 4a66948df978e3ce480652b5031736edf7e6d2b04ec587cef89d4477028813bd
     maintainers:
@@ -122,7 +135,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-14T13:48:46.339890641Z"
+    created: "2026-10-14T14:56:53.292015293Z"
     description: A Helm chart for deploying a vLLM endpoint
     digest: b1f9b0dd6abb7bb5c3ae7a0b12c9a58fe3c81e51bd84076ae54420e0a22de604
     maintainers:
@@ -133,4 +146,4 @@ entries:
     urls:
     - https://c3se.github.io/charts/vllm-0.0.1.tgz
     version: 0.0.1
-generated: "2026-10-14T13:48:46.333267744Z"
+generated: "2026-10-14T14:56:53.287991118Z"
