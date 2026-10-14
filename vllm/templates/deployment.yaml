@@ -80,6 +80,12 @@ spec:
           failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
           successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
         resources:
+          requests:
+            cpu: {{ .Values.resources.cpu }}
+            memory: {{ .Values.resources.memory }}Gi
+          limits:
+            cpu: {{ .Values.resources.cpu }}
+            memory: {{ .Values.resources.memory }}Gi
           claims:
           - name: {{ printf "%s-%s" (index $prefixes $count) (index $model .Values.resources.gpu_model) | quote }}
             request: {{ printf "%s%s" (ternary "mps-" "" (lt (.Values.resources.gpu | float64) 1.0)) "gpu" | quote }}
