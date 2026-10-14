@@ -21,12 +21,9 @@ spec:
       labels:
         {{- include "vllm.selectorLabels" . | nindent 8 }}
     spec:
-      runtimeClassName: nvidia
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      nodeSelector:
-        nvidia.com/gpu.product: "{{ .Values.resources.gpu_model }}"
       containers:
       - name: vllm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -71,19 +68,17 @@ spec:
           failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
           successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
         resources:
-          requests:
-            cpu: {{ .Values.resources.cpu }}
-            memory: {{ .Values.resources.memory }}Gi
-            nvidia.com/gpu: {{ .Values.resources.gpu }}
-          limits:
-            cpu: {{ .Values.resources.cpu }}
-            memory: {{ .Values.resources.memory }}Gi
-            nvidia.com/gpu: {{ .Values.resources.gpu }}
+          claims:
+          - name: shared-gpu
+            request: mps-gpu
         volumeMounts:
         - name: cache-volume
           mountPath: /root/.cache/huggingface
         - name: shm
           mountPath: /dev/shm
+      resourceClaims:
+      - name: shared-gpu
+        resourceClaimTemplateName: {{ .Release.Name }}-gpu
       volumes:
       - name: cache-volume
         persistentVolumeClaim:

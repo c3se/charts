@@ -11,6 +11,9 @@ questions:
     description: "Number of GPUs per pod"
     type: enum
     options:
+      - "0.05"
+      - "0.1"
+      - "0.5"
       - "1"
       - "2"
       - "4"
@@ -22,9 +25,9 @@ questions:
     description: "GPU model"
     type: enum
     options:
-      - "NVIDIA-A40"
-      - "NVIDIA-A100-SXM4-80GB"
-    default: "NVIDIA-A40"
+      - "NVIDIA A40"
+      - "NVIDIA A100-SXM4-80GB"
+    default: "NVIDIA A40"
     required: true
     
   - variable: resources.cpu

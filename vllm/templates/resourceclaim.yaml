@@ -1,0 +1,30 @@
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: {{ .Release.Name }}-gpu
+spec:
+  spec:
+    devices:
+      requests:
+        - name: mps-gpu
+          exactly:
+            deviceClassName: gpu.nvidia.com
+            selectors:
+              - cel:
+                  expression: |
+                    device.attributes['gpu.nvidia.com'].productName.contains('{{ .Values.resources.gpu_model }}')
+            {{- if gt (.Values.resources.gpu | float64) 1.0 }}
+            count: {{ .Values.resources.gpu }}
+            {{- end }}
+      config:
+        - requests: ["mps-gpu"]
+          opaque:
+            driver: gpu.nvidia.com
+            parameters:
+              apiVersion: resource.nvidia.com/v1beta1
+              kind: GpuConfig
+              sharing:
+                strategy: MPS
+                mpsConfig:
+                  defaultActiveThreadPercentage: {{ mulf (.Values.resources.gpu | float64) 100.0 }}
+                  defaultPinnedDeviceMemoryLimit: {{ mulf (.Values.resources.gpu | float64) 45.0 }}Gi
