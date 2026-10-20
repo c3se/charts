@@ -1,0 +1,71 @@
+{{- if .Values.httpRoute.enabled }}
+{{- $ns := lookup "v1" "Namespace" "" .Release.Namespace  -}}
+{{- $dirname := dig "metadata" "labels" "c3se.chalmers.se/directoryName" "c3-staff" ($ns | default dict) -}}
+{{- $hostname := printf "%s.%s.disa.c3se.chalmers.se" .Values.httpRoute.subdomain $dirname -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "litellm.fullname" . }}
+  labels:
+    {{- include "litellm.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: {{ include "litellm.fullname" . }}
+      sectionName: https
+  hostnames:
+    - {{ $hostname }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ include "litellm.fullname" . }}
+          port: {{ .Values.service.port }}
+      timeouts:
+        request: 300s
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: {{ include "litellm.fullname" . }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-issuer
+spec:
+  parentRef:
+    name: public-gateway
+    namespace: gateway
+    kind: Gateway
+    group: gateway.networking.k8s.io
+  listeners:
+    - hostname: {{ $hostname }}
+      protocol: HTTPS
+      port: 443
+      name: https
+      tls:
+        certificateRefs:
+          - name: {{ include "litellm.fullname" . }}-tls
+            kind: Secret
+        mode: Terminate
+{{- if .Values.httpRoute.securityPolicy }}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: {{ include "litellm.fullname" . }}
+spec:
+  targetRefs:
+    - kind: HTTPRoute
+      name: {{ include "litellm.fullname" . }}
+      group:  gateway.networking.k8s.io
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          clientCIDRs:
+            {{- toYaml .Values.httpRoute.allowedCidrs | nindent 12. }}
+{{- end }}
+{{- end }}

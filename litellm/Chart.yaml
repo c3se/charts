@@ -1,0 +1,9 @@
+apiVersion: v2
+name: litellm
+description: LiteLLM Proxy deployment
+type: application
+version: 0.0.1
+appVersion: "latest"
+maintainers:
+  - name: C3SE Staff
+    email: staff@c3se.chalmers.se

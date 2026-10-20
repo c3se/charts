@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "litellm.fullname" . }}-pg-secret
+stringData:
+  username: litellm
+  password: litellm
+  # password: {{/* .Values.postgres.password */}}
+type: kubernetes.io/basic-auth
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "litellm.fullname" . }}-pg-cluster
+  labels:
+    {{- include "litellm.labels" . | nindent 4 }}
+spec:
+  bootstrap:
+    initdb:
+      database: litellm
+      owner: litellm
+      secret:
+        name: {{ include "litellm.fullname" . }}-pg-secret
+  instances: 2
+  storage:
+    size: "5Gi"

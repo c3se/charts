@@ -1,0 +1,62 @@
+questions:
+  - variable: resources.cpu
+    label: "CPU"
+    description: "Number of CPU cores per pod"
+    type: string
+    default: "8"
+    required: true
+
+  - variable: resources.memory
+    label: "Memory"
+    description: "Max memory usage (in Gi)"
+    type: string
+    default: "16"
+    required: true
+
+  - variable: proxyConfig
+    label: LiteLLM Proxy Configuration
+    description: >-
+      Paste your LiteLLM config.yaml content.
+      Use os.environ/VARIABLE_NAME for secrets.
+    type: multiline
+    required: true
+    group: LiteLLM Configuration
+
+  - variable: environmentSecrets.pairs
+    label: Secret environment variables
+    description: >-
+      Enter one KEY=value pair per line.
+      Example: OPENAI_API_KEY=your-api-key
+      Do not use quotes around values.
+    type: multiline
+    required: false
+    group: Secrets
+
+  - variable: httpRoute.enabled
+    label: "Enable HTTPRoute"
+    description: "Create HTTPRoute for external access via gateway"
+    type: boolean
+    default: true
+    show_subquestions_if: true
+    subquestions:
+      - variable: httpRoute.subdomain
+        label: "Subdomain"
+        description: "Subdomain for the HTTPRoute (under .<your-proj>.disa.c3se.chalmers.se)"
+        type: string
+        default: "litellm"
+        required: true
+        show_if: "httpRoute.enabled=true"
+      - variable: httpRoute.securityPolicy
+        label: "SecurityPolicy"
+        description: "Restrict access to endpoint with a security policy"
+        type: boolean
+        default: true
+        required: true
+        show_if: "httpRoute.enabled=true"
+      - variable: httpRoute.allowedCidrs.0
+        label: "Allowed CIDR"
+        description: "Allowed CIDR to access the service (a list can be added in the yaml)"
+        type: string
+        default: "129.16.0.0/16"
+        required: true
+        show_if: "httpRoute.enabled=true"
