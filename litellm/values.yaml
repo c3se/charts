@@ -1,0 +1,72 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/berriai/litellm
+  tag: "v1.103.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 4000
+  targetPort: 4000
+
+httpRoute:
+  enabled: true
+  subdomain: "litellm"
+  securityPolicy: true
+  allowedCidrs:
+    - 129.16.0.0/16
+
+resources:
+  requests:
+    cpu: 2
+    memory: 2Gi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+proxyConfig: ""
+
+# Existing Secret containing provider keys and other
+# environment variables. Leave empty if not needed.
+environmentSecrets:
+  name: litellm-env
+  pairs: |
+    REDIS_PASSWORD=litellm
+    # Set following variables to enable SSO login
+    # GENERIC_CLIENT_ID=
+    # GENERIC_CLIENT_SECRET=
+    # GENERIC_AUTHORIZATION_ENDPOINT=
+    # GENERIC_TOKEN_ENDPOINT=
+    # GENERIC_USERINFO_ENDPOINT=
+    # GENERIC_USER_ROLE_ATTRIBUTE=
+
+# Use an existing Secret for the master key.
+masterKey:
+  existingSecret: ""
+  secretKey: LITELLM_MASTER_KEY
+
+# Optional LiteLLM config.yaml content.
+# Configure models here or manage them through the UI
+# when a database is configured.
+livenessProbe:
+  enabled: true
+  path: /health/liveliness
+  initialDelaySeconds: 60
+  periodSeconds: 15
+
+readinessProbe:
+  enabled: true
+  path: /health/readiness
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
