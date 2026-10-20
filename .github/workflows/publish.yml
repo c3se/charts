@@ -18,6 +18,7 @@ jobs:
         run: |
           mkdir -p .helm-repo
           helm package ./vllm -d .helm-repo
+          helm package ./litellm -d .helm-repo
           helm repo add jupytherhub https://hub.jupyter.org/helm-chart/
           helm dependency build ./jupyterhub
           helm package ./jupyterhub -d .helm-repo
