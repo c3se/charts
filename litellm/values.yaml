@@ -30,13 +30,22 @@ resources:
     cpu: "2"
     memory: 2Gi
 
-proxyConfig: ""
+proxyConfig: |
+  # Example:
+  # - model_list: openai/gpt-oss-20b
+  #   litellm_params:
+  #     model: hosted_vllm/openai/gpt-oss-20b
+  #     api_base: http://openai-gpt-oss-20b-vllm:8000/v1
+  #   model_info:
+  #     input_cost_per_token: 0.000001
+  #     output_cost_per_token: 0.000002
 
 # Existing Secret containing provider keys and other
 # environment variables. Leave empty if not needed.
 environmentSecrets: litellm-env
 secretEnvText: |
   REDIS_PASSWORD=litellm
+  STORE_MODEL_IN_DB=True # Turn this off if you only want static model list from config file.
   # Set following variables to enable SSO login
   # GENERIC_CLIENT_ID=
   # GENERIC_CLIENT_SECRET=
