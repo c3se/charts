@@ -72,7 +72,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            requests:
+              cpu: {{ .Values.resources.cpu }}
+              memory: {{ .Values.resources.memory }}Gi
+            limits:
+              cpu: {{ .Values.resources.cpu }}
+              memory: {{ .Values.resources.memory }}Gi
       volumes:
         - name: litellm-config
           configMap:
