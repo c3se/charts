@@ -1,9 +1,11 @@
+{{- if le (.Values.resources.gpu | float64) 4.0 }}
 {{- $prefixes := dict
   "0.25" "quarter"
   "0.5" "half"
   "1" "one"
   "2" "two"
   "4" "four"
+  "8" "eight"
 }}
 {{- $count := printf "%v" .Values.resources.gpu }}
 {{- $model := dict
@@ -105,3 +107,4 @@ spec:
         emptyDir:
           medium: Memory
           sizeLimit: 2Gi
+{{ end }}
