@@ -24,7 +24,7 @@ httpRoute:
 
 resources:
   cpu: 8
-  memory: 8Gi
+  memory: 8
 
 proxyConfig: |
   # Example:
