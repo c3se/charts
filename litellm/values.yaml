@@ -23,12 +23,8 @@ httpRoute:
     - 129.16.0.0/16
 
 resources:
-  requests:
-    cpu: 2
-    memory: 2Gi
-  limits:
-    cpu: "2"
-    memory: 2Gi
+  cpu: 8
+  memory: 8Gi
 
 proxyConfig: |
   # Example:
