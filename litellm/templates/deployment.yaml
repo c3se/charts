@@ -43,11 +43,11 @@ spec:
                   name: {{ .Values.masterKey.existingSecret | quote }}
                   key: {{ .Values.masterKey.secretKey | quote }}
             {{- end }}
-          {{- if or .Values.environmentSecrets.name .Values.masterKey.existingSecret }}
+          {{- if or .Values.environmentSecrets .Values.masterKey.existingSecret }}
           envFrom:
-            {{- if .Values.environmentSecrets.name }}
+            {{- if .Values.environmentSecrets }}
             - secretRef:
-                name: {{ .Values.environmentSecrets.name | quote }}
+                name: {{ .Values.environmentSecrets | quote }}
             {{- end }}
           {{- end }}
           volumeMounts:

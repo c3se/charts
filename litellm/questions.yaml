@@ -22,7 +22,7 @@ questions:
     required: true
     group: LiteLLM Configuration
 
-  - variable: environmentSecrets.pairs
+  - variable: secretEnvText
     label: Secret environment variables
     description: >-
       Enter one KEY=value pair per line.
