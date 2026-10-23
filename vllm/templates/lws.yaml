@@ -1,0 +1,137 @@
+{{- if gt (.Values.resources.gpu | float64) 4.0 }}
+{{- $model := dict
+  "NVIDIA A40" "a40"
+  "NVIDIA A100-SXM4-80GB" "a100fat"
+}}
+apiVersion: leaderworkerset.x-k8s.io/v1
+kind: LeaderWorkerSet
+metadata:
+  name: {{ include "vllm.fullname" . }}-lws
+  labels:
+    {{- include "vllm.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  leaderWorkerTemplate:
+    size: {{ div .Values.resources.gpu 4 }}
+    restartPolicy: RecreateGroupOnPodRestart
+    leaderTemplate:
+      metadata:
+        labels:
+          {{- include "vllm.selectorLabels" . | nindent 10 }}
+          role: leader
+      spec:
+        containers:
+          - name: vllm
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            # env:
+            #   - name: HF_TOKEN
+            #     value: <your-hf-token>
+            command:
+              - sh
+              - -c
+            args:
+              - >-
+                vllm serve {{ .Values.model.name }} {{ join " " .Values.model.args }}
+                --tensor-parallel-size 4 --pipeline-parallel-size $(LWS_GROUP_SIZE)
+                --nnodes $(LWS_GROUP_SIZE) --node-rank $(LWS_WORKER_INDEX) --master-addr $(LWS_LEADER_ADDRESS)
+            resources:
+              requests:
+                cpu: {{ .Values.resources.cpu }}
+                memory: {{ .Values.resources.memory }}Gi
+              limits:
+                cpu: {{ .Values.resources.cpu }}
+                memory: {{ .Values.resources.memory }}Gi
+              claims:
+              - name: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+                request: {{ printf "%s%s" (ternary "mps-" "" (lt (.Values.resources.gpu | float64) 1.0)) "gpu" | quote }}
+            ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            startupProbe:
+              httpGet:
+                path: /health
+                port: {{ .Values.service.targetPort }}
+                scheme: HTTP
+              initialDelaySeconds: {{ .Values.deployment.startupProbe.initialDelaySeconds }}
+              periodSeconds: {{ .Values.deployment.startupProbe.periodSeconds }}
+              timeoutSeconds: {{ .Values.deployment.startupProbe.timeoutSeconds }}
+              failureThreshold: {{ .Values.deployment.startupProbe.failureThreshold }}
+              successThreshold: {{ .Values.deployment.startupProbe.successThreshold }}
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: {{ .Values.service.targetPort }}
+                scheme: HTTP
+              periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds }}
+              timeoutSeconds: {{ .Values.deployment.livenessProbe.timeoutSeconds }}
+              failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
+              successThreshold: {{ .Values.deployment.livenessProbe.successThreshold }}
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: {{ .Values.service.targetPort }}
+                scheme: HTTP
+              periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds }}
+              timeoutSeconds: {{ .Values.deployment.readinessProbe.timeoutSeconds }}
+              failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
+              successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
+            volumeMounts:
+            - name: cache-volume
+              mountPath: /root/.cache/huggingface
+            - name: shm
+              mountPath: /dev/shm
+        resourceClaims:
+        - name: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+          resourceClaimTemplateName: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+        volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: vllm-cache
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
+    workerTemplate:
+      spec:
+        containers:
+          - name: vllm-worker
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command:
+              - sh
+              - -c
+            args:
+              - >-
+                vllm serve {{ .Values.model.name }} {{ join " " .Values.model.args }}
+                --tensor-parallel-size 4 --pipeline-parallel-size $(LWS_GROUP_SIZE)
+                --nnodes $(LWS_GROUP_SIZE) --node-rank $(LWS_WORKER_INDEX) --master-addr $(LWS_LEADER_ADDRESS) --headless
+            resources:
+              requests:
+                cpu: {{ .Values.resources.cpu }}
+                memory: {{ .Values.resources.memory }}Gi
+              limits:
+                cpu: {{ .Values.resources.cpu }}
+                memory: {{ .Values.resources.memory }}Gi
+              claims:
+              - name: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+                request: {{ printf "%s%s" (ternary "mps-" "" (lt (.Values.resources.gpu | float64) 1.0)) "gpu" | quote }}
+            # env:
+            #   - name: HF_TOKEN
+            #     value: <your-hf-token>
+            volumeMounts:
+            - name: cache-volume
+              mountPath: /root/.cache/huggingface
+            - name: shm
+              mountPath: /dev/shm
+        resourceClaims:
+        - name: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+          resourceClaimTemplateName: {{ printf "%s-%s" "four" (index $model .Values.resources.gpu_model) | quote }}
+        volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: vllm-cache
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
+{{ end }}

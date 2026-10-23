@@ -1,6 +1,6 @@
 {{- if .Values.httpRoute.enabled }}
 {{- $ns := lookup "v1" "Namespace" "" .Release.Namespace  -}}
-{{- $dirname := index $ns.metadata.labels "c3se.chalmers.se/directoryName" -}}
+{{- $dirname := dig "metadata" "labels" "c3se.chalmers.se/directoryName" "c3-staff" ($ns | default dict) -}}
 {{- $hostname := printf "%s.%s.disa.c3se.chalmers.se" .Values.httpRoute.subdomain $dirname -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

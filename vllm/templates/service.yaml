@@ -14,3 +14,7 @@ spec:
       name: http
   selector:
     {{- include "vllm.selectorLabels" . | nindent 4 }}
+    {{- if gt (.Values.resources.gpu | float64) 4.0 }}
+    leaderworkerset.sigs.k8s.io/name: {{ include "vllm.fullname" .}}-lws
+    role: leader
+    {{- end }}
