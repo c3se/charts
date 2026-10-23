@@ -2,7 +2,7 @@ apiVersion: v2
 name: litellm
 description: LiteLLM Proxy deployment
 type: application
-version: 0.0.2
+version: 0.0.3
 appVersion: "latest"
 maintainers:
   - name: C3SE Staff
