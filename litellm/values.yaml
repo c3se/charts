@@ -34,17 +34,16 @@ proxyConfig: ""
 
 # Existing Secret containing provider keys and other
 # environment variables. Leave empty if not needed.
-environmentSecrets:
-  name: litellm-env
-  pairs: |
-    REDIS_PASSWORD=litellm
-    # Set following variables to enable SSO login
-    # GENERIC_CLIENT_ID=
-    # GENERIC_CLIENT_SECRET=
-    # GENERIC_AUTHORIZATION_ENDPOINT=
-    # GENERIC_TOKEN_ENDPOINT=
-    # GENERIC_USERINFO_ENDPOINT=
-    # GENERIC_USER_ROLE_ATTRIBUTE=
+environmentSecrets: litellm-env
+secretEnvText: |
+  REDIS_PASSWORD=litellm
+  # Set following variables to enable SSO login
+  # GENERIC_CLIENT_ID=
+  # GENERIC_CLIENT_SECRET=
+  # GENERIC_AUTHORIZATION_ENDPOINT=
+  # GENERIC_TOKEN_ENDPOINT=
+  # GENERIC_USERINFO_ENDPOINT=
+  # GENERIC_USER_ROLE_ATTRIBUTE=
 
 # Use an existing Secret for the master key.
 masterKey:
