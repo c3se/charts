@@ -1,0 +1,59 @@
+deployment:
+  livenessProbe:
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+    failureThreshold: 6
+  progressDeadlineSeconds: 1200
+  readinessProbe:
+    failureThreshold: 6
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  revisionHistoryLimit: 3
+  startupProbe:
+    failureThreshold: 30
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 1
+httpRoute:
+  allowedCidrs:
+    - 129.16.0.0/16
+  enabled: true
+  securityPolicy: true
+  subdomain: glm
+image:
+  pullPolicy: Always
+  repository: vllm/vllm-openai
+  tag: nightly
+model:
+  args:
+    - '--tensor-parallel-size 4'
+    - '--kv-cache-dtype bfloat16'
+    - '--reasoning-parser glm45'
+    - '--chat-template-content-format string'
+    - '--speculative-config ''{"method":"mtp","num_speculative_tokens":5}'''
+    - '--trust-remote-code'
+  name: nvidia/GLM-5.3-NVFP4
+resources:
+  cpu: 48
+  gpu: 8
+  gpu_model: NVIDIA A100-SXM4-80GB
+  memory: 480
+service:
+  port: 8000
+  targetPort: 8000
+  type: ClusterIP
+storage:
+  create: true
+  pvc: glm35
+  storageClass: null
+global:
+  cattle:
+    clusterId: c-v6zck
+    clusterName: disa
+    rkePathPrefix: ''
+    rkeWindowsPathPrefix: ''
+    systemProjectId: ''
+    url: https://rancher.c3se.chalmers.se

@@ -1,0 +1,62 @@
+deployment:
+  livenessProbe:
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  progressDeadlineSeconds: 1200
+  readinessProbe:
+    failureThreshold: 6
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  revisionHistoryLimit: 3
+  startupProbe:
+    failureThreshold: 60
+    initialDelaySeconds: 180
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 1
+httpRoute:
+  allowedCidrs:
+    - 129.16.0.0/16
+  enabled: true
+  securityPolicy: true
+  subdomain: minimax-m3
+image:
+  pullPolicy: Always
+  repository: vllm/vllm-openai
+  tag: nightly
+model:
+  args:
+    - '--block-size 128'
+    - '--trust-remote-code'
+    - '--tensor-parallel-size 4'
+    - '--tool-call-parser minimax_m3'
+    - '--enable-auto-tool-choice'
+    - '--reasoning-parser minimax_m3'
+    - '--safetensors-load-strategy prefetch'
+    # minimax leaks <mm:think> tags somehow without this template-kwargs
+    # https://github.com/vllm-project/vllm/issues/48663
+    - '--default-chat-template-kwargs ''{"thinking_mode":"enabled"}'''
+    # limiting context window allows this to run on one a100fat node
+    # to lift this limit one needs at least a100fat nodes
+    - '--max-model-len 250000'
+    # the limit for video frame and image counts is required even on two
+    # a100fat nodes
+    - >-
+      --limit-mm-per-prompt
+      '{"video":{"count":1,"num_frames":8},"image":{"count":4}}'
+  name: nvidia/MiniMax-M3-NVFP4
+resources:
+  cpu: '48'
+  gpu: '4'
+  gpu_model: NVIDIA A100-SXM4-80GB
+  memory: '512'
+service:
+  port: 8000
+  targetPort: 8000
+  type: ClusterIP
+storage:
+  create: false
+  pvc: vllm-cache
+  storageClass: null
