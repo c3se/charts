@@ -8,7 +8,7 @@ questions:
 
   - variable: resources.gpu
     label: "GPU"
-    description: "Number of GPUs per pod"
+    description: "Number of GPUs (total)"
     type: enum
     options:
       - "0.25"
@@ -16,6 +16,7 @@ questions:
       - "1"
       - "2"
       - "4"
+      - "8"
     default: "1"
     required: true
 

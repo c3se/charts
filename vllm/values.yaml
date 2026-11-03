@@ -52,4 +52,5 @@ deployment:
   livenessProbe:
     timeoutSeconds: 1
     periodSeconds: 10
+    failureThreshold: 6
     successThreshold: 1
