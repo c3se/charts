@@ -13,6 +13,48 @@ questions:
     default: "16"
     required: true
 
+  - variable: masterKey
+    label: Litellm master key
+    description: Must start with sk- followed by at least 48 hexadecimal characters. You can create with `echo sk-$(openssl rand -hex 24)`
+    type: password
+    required: true
+    validChars: "^sk-[a-fA-F0-9]{48,}$"
+
+  - variable: saltKey
+    label: Litellm salt key
+    description: Litellm salt key
+    type: password
+    required: false
+    validChars: "^sk-[a-fA-F0-9]{48,}$"
+
+  - variable: postgres.database
+    label: Database name
+    description: Postgresql database name
+    type: string
+    required: true
+    group: Postgres
+
+  - variable: postgres.username
+    label: Database username
+    description: Postgresql database username
+    type: string
+    required: true
+    group: Postgres
+
+  - variable: postgres.password
+    label: Database password
+    description: Postgresql database password
+    type: string
+    required: true
+    group: Postgres
+
+  - variable: redis.password
+    label: Redis password
+    description: Redis password
+    type: string
+    required: true
+    group: Redis
+
   - variable: proxyConfig
     label: LiteLLM Proxy Configuration
     description: >-

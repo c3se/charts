@@ -4,7 +4,7 @@ metadata:
   name: {{ include "litellm.fullname" . }}-valkey-secret
 stringData:
   username: default
-  password: litellm
+  password: {{ .Values.redis.password }}
 type: kubernetes.io/basic-auth
 ---
 apiVersion: valkey.io/v1alpha1
